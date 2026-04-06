@@ -1,0 +1,52 @@
+@use "../colors/colors.scss" as *;
+@use "../mixins/mixins.scss" as *;
+
+.hero-section {
+  width: 100vw;
+  max-width: 1800px;
+  display: flex;
+  justify-content: center;
+  padding-top: 5rem;
+}
+
+.hero-section-content {
+  width: 100%;
+  height: 500px;
+  background-image: url("/images/hero-section.jpg");
+  background-size: cover;
+  display: flex;
+  flex-direction: column;
+  row-gap: 1rem;
+  padding-left: 5rem;
+  justify-content: center;
+  position: relative;
+  & h1 {
+    @include font(4rem, 700);
+    color: $white;
+    max-width: 350px
+  }
+  & p {
+    @include font(1.5rem, 400);
+    color: $white;
+    max-width: 350px
+  }
+  & a {
+    @include font(1rem, 100);
+    color: $white;
+    border: solid 1px $white;
+    padding: 1rem 2rem;
+    border-radius: 30px;
+    width: fit-content;
+  }
+  &::before {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 30px;
+    background-color: $muted-black;
+    border-top-left-radius: 40px;
+    border-top-right-radius: 40px;
+  }
+}

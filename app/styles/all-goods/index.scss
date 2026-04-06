@@ -1,0 +1,63 @@
+@use "../colors/colors.scss" as *;
+@use "../mixins/mixins.scss" as *;
+#goods {
+  width: 100vw;
+  max-width: 1800px;
+  display: flex;
+  justify-content: center;
+}
+.goods {
+  padding-top: 5rem;
+  width: 90%;
+  display: flex;
+  flex-direction: column;
+  row-gap: 5rem;
+}
+
+.goods-header {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.goods-header-items {
+  display: flex;
+  column-gap: 3rem;
+  @media screen and (max-width: 768px) {
+    width: 100%;
+    overflow-x: auto;
+  }
+}
+
+.good-head-item {
+  display: flex;
+  flex-direction: column;
+  row-gap: 1.5rem;
+  align-items: center;
+  max-width: 120px;
+  cursor: pointer;
+  
+  & p {
+    @include font(1rem, 100);
+    text-align: center;
+    color: $primary-gray;
+  }
+}
+
+.good-item-image {
+  width: 100px;
+  height: 100px;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  border-radius: 50%;
+  position: relative;
+}
+
+.active  {
+  .good-item-image {
+    outline: solid 2px $contrast-blue;
+    outline-offset: 5px;
+  }
+}
+

@@ -1,0 +1,129 @@
+// ============================================
+// 1. Основные цвета (стандартные)
+// ============================================
+$primary-orange: #ee863c;
+$primary-red: #d54b2a;
+$primary-green: #23ab7f;
+$primary-blue: #557b9e;
+$primary-gray: #b2b1b2;
+$primary-brown: #603f3e;
+$primary-purple: #434361;
+$primary-slate: #656e72;
+$primary-dark: #3e4348;
+$primary-black: #000000;
+
+// ============================================
+// 2. Акцентные цвета (градиент оранжевого)
+// ============================================
+$accent-1: #ee863c;
+$accent-2: #e97a38;
+$accent-3: #e46e35;
+$accent-4: #df6331;
+$accent-5: #da572e;
+$accent-6: #d54b2a;
+$accent-green: #23ab7f;
+$accent-mint: #47986e;
+$accent-olive: #6a855d;
+$accent-gold: #8e714c;
+$accent-terracotta: #b15e3b;
+$accent-red: #d54b2a;
+
+// ============================================
+// 3. Приглушенные цвета (для фонов, текста)
+// ============================================
+$muted-purple: #434361;
+$muted-slate: #656e72;
+$muted-dark: #3e4348;
+$muted-black: #131a1b;
+
+// ============================================
+// 4. Светлые цвета (для фонов, карточек)
+// ============================================
+$white: #ffffff;
+$light-1: #fdf4ed;
+$light-2: #fce9dc;
+$light-3: #fadeca;
+$light-4: #f9d3b8;
+$light-5: #f7c8a6;
+$light-6: #f6bd95;
+$light-7: #f4b283;
+$light-8: #f3a771;
+$light-9: #f19c5f;
+$light-10: #f0914e;
+$light-11: #ee863c;
+
+// ============================================
+// 5. Темные цвета (для текста, теней)
+// ============================================
+$black: #000000;
+$dark-1: #160c05;
+$dark-2: #2b180b;
+$dark-3: #412510;
+$dark-4: #573116;
+$dark-5: #6c3d1b;
+$dark-6: #824921;
+$dark-7: #975526;
+$dark-8: #ad612c;
+$dark-9: #c36e31;
+$dark-10: #d87a37;
+$dark-11: #ee863c;
+
+// ============================================
+// 6. Противоположные цвета (контрастные)
+// ============================================
+$contrast-blue: #1179c3;
+$contrast-cyan: #2ab4d5;
+$contrast-pink: #dc5480;
+$contrast-beige: #aa8461;
+$contrast-dark: #2a2d2c;
+$contrast-teal: #9fc0c1;
+$contrast-olive: #bcbc9e;
+$contrast-warm: #9a918d;
+$contrast-light: #c1bcb7;
+$contrast-soft: #ece5e4;
+
+// ============================================
+// 7. Семантические переменные (использовать в компонентах)
+// ============================================
+
+// Основные
+$color-primary: $primary-orange;
+$color-secondary: $primary-red;
+$color-success: $primary-green;
+$color-info: $primary-blue;
+$color-warning: $primary-orange;
+$color-danger: $primary-red;
+
+// Текст
+$text-primary: $muted-black;
+$text-secondary: $muted-slate;
+$text-light: $white;
+$text-dark: $dark-2;
+$text-muted: $muted-purple;
+
+// Фоны
+$bg-primary: $white;
+$bg-secondary: $light-1;
+$bg-dark: $muted-black;
+$bg-card: $white;
+$bg-overlay: rgba($muted-black, 0.8);
+
+// Границы
+$border-light: $light-3;
+$border-medium: $muted-slate;
+$border-dark: $muted-black;
+
+// Акценты
+$accent-primary: $accent-1;
+$accent-hover: $accent-6;
+$accent-active: $accent-4;
+
+// Кнопки
+$btn-primary-bg: $accent-1;
+$btn-primary-hover: $accent-6;
+$btn-primary-active: $accent-4;
+$btn-primary-text: $white;
+
+$btn-secondary-bg: $muted-purple;
+$btn-secondary-hover: $primary-purple;
+$btn-secondary-text: $white;

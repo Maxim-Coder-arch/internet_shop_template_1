@@ -1,0 +1,14 @@
+.good-cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  width: 100%;
+  @media (max-width: 1024px) {
+    gap: 16px;
+  }
+  
+  @media (max-width: 768px) {
+    gap: 12px;
+    justify-content: center;
+  }
+}
