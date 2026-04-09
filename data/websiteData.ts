@@ -68,4 +68,5 @@ export interface IDoods {
   isGreatDeals: boolean; // выгодные предложения (категория)
   isRecommend: boolean; // рекомендуемые (категория)
   fullDescription: string; // полное описание товара для странички с товаром
+  addititionalImage: string[]; // дополнительные изображения для карточки товара (максимум 3)
 }

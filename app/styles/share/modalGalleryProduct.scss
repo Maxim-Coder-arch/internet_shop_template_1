@@ -1,0 +1,116 @@
+@use "../colors/colors.scss" as *;
+@use "../mixins/mixins.scss" as *;
+
+.modal-gallery-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.95);
+  z-index: 2000;
+}
+
+.modal-gallery {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 2001;
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  
+  &__close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: none;
+    border: none;
+    font-size: 2.5rem;
+    color: white;
+    cursor: pointer;
+    z-index: 2002;
+    transition: opacity 0.2s;
+    &:hover { opacity: 0.7; }
+  }
+  
+  &__main {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    
+    .image-container {
+      position: relative;
+      width: 80%;
+      height: 80%;
+      max-width: 90vw;
+      max-height: 70vh;
+    }
+    
+    .nav {
+      position: absolute;
+      background: rgba(255,255,255,0.2);
+      border: none;
+      font-size: 3rem;
+      color: white;
+      cursor: pointer;
+      // padding: 0.5rem 1rem;
+      border-radius: 50%;
+      transition: all 0.2s;
+      &:hover { background: rgba(255,255,255,0.4); }
+      
+      &.prev { left: 1rem; }
+      &.next { right: 1rem; }
+    }
+  }
+  
+  &__footer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    
+    .counter {
+      color: white;
+      font-size: 0.9rem;
+    }
+    
+    .thumbnails {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      justify-content: center;
+      
+      button {
+        width: 60px;
+        height: 60px;
+        padding: 0;
+        border: 2px solid transparent;
+        border-radius: 8px;
+        overflow: hidden;
+        cursor: pointer;
+        transition: all 0.2s;
+        
+        &.active { border-color: #ee863c; transform: scale(1.05); }
+        &:hover { opacity: 0.8; }
+        
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+      }
+    }
+  }
+}
+
+// Активная миниатюра
+.page-card-images button.active {
+  border: 2px solid #ee863c;
+  transform: scale(1.05);
+}

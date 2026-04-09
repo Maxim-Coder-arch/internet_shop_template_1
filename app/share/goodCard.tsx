@@ -96,7 +96,7 @@ const GoodCard = ({
           </div>
           
           <Link 
-            href={"#" + id} className="order-good">
+            href={"/pages/product/" + id} className="order-good">
             Заказать
           </Link>
         </div>
