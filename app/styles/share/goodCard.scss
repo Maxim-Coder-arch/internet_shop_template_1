@@ -161,3 +161,81 @@
   filter: grayscale(100%);
   pointer-events: none;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// styles/all-goods/index.scss
+.skeleton-card {
+  width: 100%;
+  background: rgba(black, 0.05);
+  border-radius: 12px;
+  overflow: hidden;
+  
+  .skeleton-image {
+    width: 100%;
+    padding-top: 100%;
+    background: linear-gradient(90deg, 
+      rgba(black, 0.05) 25%, 
+      rgba(black, 0.1) 50%, 
+      rgba(black, 0.05) 75%);
+    background-size: 200% 100%;
+    animation: loading 1.5s infinite;
+  }
+  
+  .skeleton-title {
+    height: 20px;
+    margin: 12px;
+    background: rgba(black, 0.05);
+    border-radius: 4px;
+  }
+  
+  .skeleton-price {
+    height: 24px;
+    margin: 12px;
+    width: 60%;
+    background: rgba(black, 0.05);
+    border-radius: 4px;
+  }
+}
+
+@keyframes loading {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.loading-indicator {
+  text-align: center;
+  padding: 2rem;
+  color: black;
+}
+
+.end-message {
+  text-align: center;
+  padding: 2rem;
+  color: black;
+  border-top: 1px solid rgba(black, 0.1);
+  margin-top: 1rem;
+}

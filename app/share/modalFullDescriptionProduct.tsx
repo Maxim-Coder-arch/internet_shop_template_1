@@ -3,7 +3,20 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import "../styles/share/modalFullDescriptionProduct.scss";
 
-const ModalDescription = ({ isOpen, onClose, title, description }) => {
+interface IModalDescriptionProps {
+  isOpen: boolean;
+  onClose: () => void;
+  title: string;
+  description: string;
+}
+
+const ModalDescription = ({ 
+  isOpen, 
+  onClose, 
+  title, 
+  description
+ }: IModalDescriptionProps) => {
+  
   return (
     <AnimatePresence>
       {isOpen && (

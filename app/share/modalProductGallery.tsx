@@ -1,35 +1,50 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 import '../styles/share/modalGalleryProduct.scss';
 
-const ModalGallery = ({ isOpen, onClose, images, initialIndex, title }) => {
+interface IModalGalleryProps {
+  isOpen: boolean;
+  onClose: () => void;
+  images: (string | undefined)[];
+  initialIndex: number;
+  title: string;
+}
+
+const ModalGallery = ({ 
+  isOpen, 
+  onClose, 
+  images, 
+  initialIndex, 
+  title
+}: IModalGalleryProps) => {
+
   const [currentIndex, setCurrentIndex] = useState(initialIndex);
+  const prevImage = useCallback(() => {
+    setCurrentIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
+  }, [images.length]);
+
+  const nextImage = useCallback(() => {
+    setCurrentIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1));
+  }, [images.length]);
 
   useEffect(() => {
     setCurrentIndex(initialIndex);
   }, [initialIndex]);
 
   useEffect(() => {
-    const handleKeyDown = (e) => {
+    const handleKeyDown = (e: KeyboardEvent) => {
       if (!isOpen) return;
       if (e.key === 'ArrowLeft') prevImage();
       if (e.key === 'ArrowRight') nextImage();
       if (e.key === 'Escape') onClose();
     };
+    
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isOpen, currentIndex]);
-
-  const prevImage = () => {
-    setCurrentIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
-  };
-
-  const nextImage = () => {
-    setCurrentIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1));
-  };
+  }, [isOpen, prevImage, nextImage, onClose]);
 
   return (
     <AnimatePresence>
@@ -52,18 +67,18 @@ const ModalGallery = ({ isOpen, onClose, images, initialIndex, title }) => {
             
             <div className="modal-gallery__main">
               <button className="nav prev" onClick={prevImage}>
-                <Image src="/icons/left-pointer.png" alt="Предыдущая фотография" width={50} height={50} />
+                <Image src="/icons/left-pointer.png" alt="Предыдущая" width={50} height={50} />
               </button>
               <div className="image-container">
                 <Image 
-                  src={images[currentIndex]} 
+                  src={images[currentIndex] || ""} 
                   alt={`${title} - фото ${currentIndex + 1}`}
                   fill
                   style={{ objectFit: 'contain' }}
                 />
               </div>
               <button className="nav next" onClick={nextImage}>
-                <Image src="/icons/right-pointer.png" alt="Предыдущая фотография" width={50} height={50} />
+                <Image src="/icons/right-pointer.png" alt="Следующая" width={50} height={50} />
               </button>
             </div>
 
@@ -78,7 +93,7 @@ const ModalGallery = ({ isOpen, onClose, images, initialIndex, title }) => {
                     className={idx === currentIndex ? 'active' : ''}
                     onClick={() => setCurrentIndex(idx)}
                   >
-                    <Image src={img} alt="" width={60} height={60} />
+                    <Image src={img || ""} alt="" width={60} height={60} />
                   </button>
                 ))}
               </div>

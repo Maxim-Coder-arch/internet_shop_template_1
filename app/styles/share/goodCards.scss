@@ -1,14 +1,20 @@
 .good-cards {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 20px;
   width: 100%;
+  
   @media (max-width: 1024px) {
     gap: 16px;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   }
   
   @media (max-width: 768px) {
     gap: 12px;
-    justify-content: center;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  }
+  
+  @media (max-width: 480px) {
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
   }
 }

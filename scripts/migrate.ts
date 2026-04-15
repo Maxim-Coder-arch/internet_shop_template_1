@@ -1,4 +1,11 @@
-export const products = [
+// scripts/migrate-standalone.ts
+import { MongoClient } from 'mongodb';
+
+// ПОДСТАВЬТЕ ВАШУ СТРОКУ ПОДКЛЮЧЕНИЯ!
+const MONGODB_URI = 'mongodb+srv://internet_shop_template:4djSJyNYTYbWQ6ri@cluster0.ifimnlq.mongodb.net/?appName=Cluster0';
+
+// Скопируйте массив товаров сюда
+const products = [
   {
     id: 1,
     title: "Apple Watch Ultra",
@@ -212,3 +219,46 @@ export const products = [
     ]
   }
 ];
+
+async function migrate() {
+  console.log('🔄 Начинаем миграцию...');
+  
+  const client = new MongoClient(MONGODB_URI);
+  
+  try {
+    await client.connect();
+    console.log('✅ Подключено к MongoDB');
+    
+    const db = client.db('all_products');
+    
+    // Очищаем коллекцию
+    await db.collection('products').deleteMany({});
+    console.log('🗑️ Старые данные удалены');
+    
+    // Вставляем товары
+    const productsToInsert = products.map(p => ({
+      ...p,
+      originalId: p.id,
+      id: undefined,
+      createdAt: new Date(),
+      updatedAt: new Date()
+    }));
+    
+    const result = await db.collection('products').insertMany(productsToInsert);
+    console.log(`✅ Перенесено ${result.insertedCount} товаров`);
+    
+    // Создаём индекс
+    await db.collection('products').createIndex(
+      { title: "text", subTitle: "text", fullDescription: "text" },
+      { name: "search_index" }
+    );
+    console.log('✅ Поисковый индекс создан');
+    
+  } catch (error) {
+    console.error('❌ Ошибка:', error);
+  } finally {
+    await client.close();
+  }
+}
+
+migrate();

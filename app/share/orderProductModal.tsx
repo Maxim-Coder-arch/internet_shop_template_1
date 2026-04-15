@@ -1,14 +1,21 @@
 import Image from "next/image";
 import "../styles/share/order-product-modal.scss";
+import { IGoodCardProps } from "@/types/interfaces.type";
 
-const OrderProductModal = ({ isOpen, onClose, product, price }) => {
+interface IOrderProductModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  product: IGoodCardProps;
+  price: number | string;
+}
+
+const OrderProductModal = ({ isOpen, onClose, product, price }: IOrderProductModalProps) => {
   if (!isOpen) return null;
 
   return (
     <div className="order-product-modal-overlay" onClick={onClose}>
       <div className="order-product-modal" onClick={(e) => e.stopPropagation()}>
         
-        {/* Кнопка закрытия */}
         <button className="order-product-modal__close" onClick={onClose}>×</button>
         
         <div className="order-product-modal__product">

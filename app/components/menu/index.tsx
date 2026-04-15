@@ -13,7 +13,6 @@ const Menu = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const inputRef = useRef(null);
 
-  // Закрытие по Escape
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape' && isModalOpen) {

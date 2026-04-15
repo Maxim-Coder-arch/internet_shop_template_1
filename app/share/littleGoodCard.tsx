@@ -1,12 +1,20 @@
 import Image from "next/image";
 import "../styles/share/littleGoodCard.scss";
-import { IDoods } from "@/data/websiteData";
 import Link from "next/link";
+import { usePriceDiscount } from "@/hooks/usePriceDiscount";
+import { IProduct } from "@/types/interfaces.type";
 
-const LittleGoodCard = ({ product }: { product: IDoods }) => {
-  const priceWithDiscount = product.isDiscount 
-    ? Math.floor(product.priceWithoutDiscount - (product.priceWithoutDiscount * parseInt(product.discount)) / 100)
-    : null;
+interface LittleGoodCardProps {
+  product: IProduct;
+  onClick?: () => void;
+}
+
+const LittleGoodCard = ({ product, onClick }: LittleGoodCardProps) => {
+  const priceWithDiscount = usePriceDiscount(
+    product.isDiscount, 
+    Number(product.priceWithoutDiscount), 
+    product.discount
+  );
 
   return (
     <div className={`little-good-card ${product.isStock ? "" : "no-stock"}`}>
@@ -35,7 +43,7 @@ const LittleGoodCard = ({ product }: { product: IDoods }) => {
             <span className="little-default-price">{product.priceWithoutDiscount} ₽</span>
           )}
         </div>
-        <Link href={`/pages/product/${product.id}`}>
+        <Link href={`/pages/product/${product._id}`} onClick={onClick}>
           {product.isStock ? "Заказать" : "Нет в наличии"}
         </Link>
       </div>

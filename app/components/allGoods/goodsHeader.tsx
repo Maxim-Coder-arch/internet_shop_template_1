@@ -1,3 +1,5 @@
+import "../../styles/all-goods/index.scss";
+
 interface GoodsHeaderProps {
   activeFilter: string;
   onFilterChange: (filter: string) => void;

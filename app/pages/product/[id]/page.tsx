@@ -1,30 +1,57 @@
+// app/product/[id]/page.tsx
 'use client';
 
-import "../../../styles/share/areaInPages.scss";
-import "../../../styles/product/index.scss";
-import { products } from "@/data/prroducts.data";
 import { useParams } from "next/navigation";
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ModalDescription from "@/app/share/modalFullDescriptionProduct";
 import ModalGallery from "@/app/share/modalProductGallery";
 import OrderProductModal from "@/app/share/orderProductModal";
+import { usePriceDiscount } from "@/hooks/usePriceDiscount";
+import { IProduct } from "@/types/interfaces.type";
+import "../../../styles/share/areaInPages.scss";
+import "../../../styles/product/index.scss";
 
 const Product = () => {
   const params = useParams();
-  const data = products.find(product => product.id === Number(params.id));
+  const [product, setProduct] = useState<IProduct | null>(null);
+  const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isGalleryOpen, setIsGalleryOpen] = useState(false);
   const [isOrderModalOpen, setIsOrderModalOpen] = useState(false);
-  const allImages = [data?.image, ...(data?.addititionalImage || [])];
   const [activeImageIndex, setActiveImageIndex] = useState(0);
+
+  // Загружаем товар из API
+  useEffect(() => {
+    if (!params.id) return;
+    
+    const fetchProduct = async () => {
+      try {
+        const res = await fetch(`/api/products/${params.id}`);
+        const data = await res.json();
+        if (data.success) {
+          setProduct(data.product);
+        }
+      } catch (error) {
+        console.error('Ошибка загрузки товара:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    fetchProduct();
+  }, [params.id]);
+
+  if (loading) return <div className="loading">Загрузка...</div>;
+  if (!product) return <div className="not-found">Товар не найден</div>;
+
+  const allImages = [product.image, ...(product.addititionalImage || [])];
   const activeImage = allImages[activeImageIndex];
-
-  if (!data) return <div>Продукт не найден</div>;
-
-  const priceGoodWithDiscount = data.isDiscount 
-    ? Math.floor(data.priceWithoutDiscount - (data.priceWithoutDiscount * parseInt(data.discount)) / 100)
-    : null;
+  const priceGoodWithDiscount = usePriceDiscount(
+    product.isDiscount, 
+    Number(product.priceWithoutDiscount), 
+    product.discount
+  );
 
   return (
     <section id="product">
@@ -40,14 +67,14 @@ const Product = () => {
                   className={idx === activeImageIndex ? 'active' : ''}
                   onClick={() => setActiveImageIndex(idx)}
                 >
-                  <Image src={img} alt={data.title} width={100} height={100} />
+                  <Image src={img || ""} alt={product.title} width={100} height={100} />
                 </button>
               ))}
             </div>
 
-            {/* Большое изображение с лупой */}
+            {/* Основное изображение */}
             <div className="page-card-full-image">
-              <Image src={activeImage} alt={data.title} width={500} height={500} />
+              <Image src={activeImage || ""} alt={product.title} width={500} height={500} />
               <button 
                 className="zoom-icon"
                 onClick={() => setIsGalleryOpen(true)}
@@ -57,71 +84,57 @@ const Product = () => {
               </button>
             </div>
 
+            {/* Информация о товаре */}
             <div className="card-page-body">
               <div className="card-page-body-meta-data">
-                <h1>{data.title}</h1>
-                <p>{data.subTitle}</p>
+                <h1>{product.title}</h1>
+                <p>{product.subTitle}</p>
                 
                 <div className="card-page-body-full-description">
                   <button onClick={() => setIsModalOpen(true)}>Смотреть полное описание</button>
-                  <span>{data.fullDescription.slice(0, 300)}...</span>
+                  <span>{product.fullDescription.slice(0, 300)}...</span>
                 </div>
 
                 <div className="card-page-body-price">
-                  {data.isDiscount ? (
+                  {product.isDiscount ? (
                     <>
                       <span className="card-page-body-price-with-discount">
                         {priceGoodWithDiscount} ₽
                       </span>
                       <span className="card-page-body-price-discount">
-                        Скидка {data.discount}
+                        Скидка {product.discount}
                       </span>
                       <span className="card-page-body-price-without-discount">
-                        Старая цена <mark>{data.priceWithoutDiscount} ₽</mark>
+                        Старая цена <mark>{product.priceWithoutDiscount} ₽</mark>
                       </span>
                     </>
                   ) : (
                     <span className="card-page-body-price-without-discount price-condition">
-                      Цена <mark>{data.priceWithoutDiscount} ₽</mark>
+                      Цена <mark>{product.priceWithoutDiscount} ₽</mark>
                     </span>
                   )}
                 </div>
 
                 <div className="card-page-additional-information">
-                  {data.isStock ? (
-                    <div className="card-page-additional-information__is-stock card-page-additional-information__page_template">
-                      В наличии {data.doodCount}
+                  {product.isStock ? (
+                    <div className="card-page-additional-information__is-stock">
+                      В наличии {product.doodCount}
                     </div>
                   ) : (
-                    <div className="card-page-additional-information__not-in-stock card-page-additional-information__page_template">
+                    <div className="card-page-additional-information__not-in-stock">
                       Нет в наличии
                     </div>
                   )}
-                  <div className="card-page-additional-information__rating card-page-additional-information__page_template">
-                    Рейтинг: {data.rating}
+                  <div className="card-page-additional-information__rating">
+                    Рейтинг: {product.rating}
                   </div>
-                  {data.isLowePrice && (
-                    <div className="card-page-additional-information__lower-price card-page-additional-information__page_template">
-                      Низкая цена
-                    </div>
-                  )}
-                  {data.isBuyMostOften && (
-                    <div className="card-page-additional-information__buy-most-often card-page-additional-information__page_template">
-                      Часто покупают
-                    </div>
-                  )}
-                  {data.isGreatDeals && (
-                    <div className="card-page-additional-information__great-deals card-page-additional-information__page_template">
-                      Выгодное предложение
-                    </div>
-                  )}
-                  {data.isRecommend && (
-                    <div className="card-page-additional-information__recommend card-page-additional-information__page_template">
-                      Этот товар рекомендуют другие покупатели
-                    </div>
-                  )}
+                  {product.isLowerPrice && <div className="card-page-additional-information__lower-price">Низкая цена</div>}
+                  {product.isBuyMostOften && <div className="card-page-additional-information__buy-most-often">Часто покупают</div>}
+                  {product.isGreatDeals && <div className="card-page-additional-information__great-deals">Выгодное предложение</div>}
+                  {product.isRecommend && <div className="card-page-additional-information__recommend">Рекомендуемые</div>}
                 </div>
               </div>
+              
               <div className="page-card-order">
                 <button onClick={() => setIsOrderModalOpen(true)}>Заказать</button>
                 Или
@@ -135,8 +148,8 @@ const Product = () => {
       <ModalDescription 
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        title={`Описание: ${data.title}`}
-        description={data.fullDescription}
+        title={`Описание: ${product.title}`}
+        description={product.fullDescription}
       />
 
       <ModalGallery
@@ -144,14 +157,14 @@ const Product = () => {
         onClose={() => setIsGalleryOpen(false)}
         images={allImages}
         initialIndex={activeImageIndex}
-        title={data.title}
+        title={product.title}
       />
 
       <OrderProductModal 
         isOpen={isOrderModalOpen}
         onClose={() => setIsOrderModalOpen(false)}
-        product={data}
-        price={priceGoodWithDiscount || data.priceWithoutDiscount}
+        product={product}
+        price={priceGoodWithDiscount || product.priceWithoutDiscount}
       />
     </section>
   );

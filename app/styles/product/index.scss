@@ -15,7 +15,6 @@
   margin: 0 auto;
 }
 
-// Основной контейнер карточки
 .page-card-info {
   width: 100%;
   display: flex;
@@ -39,7 +38,6 @@
   }
 }
 
-// Блок с миниатюрами
 .page-card-images {
   display: flex;
   flex-direction: row;
@@ -81,7 +79,6 @@
   }
 }
 
-// Иконка лупы на странице товара
 .zoom-icon {
   position: absolute;
   right: 1rem;
@@ -96,11 +93,9 @@
   &:hover { transform: scale(1.05); }
 }
 
-// Основное изображение
 .page-card-full-image {
   flex: 1;
   order: 1;
-  // background: $light-1;
   border-radius: 20px;
   overflow: hidden;
   display: flex;
@@ -115,12 +110,11 @@
   img {
     width: 100%;
     height: 100%;
-    object-fit: contain; /* сохраняет пропорции */
+    object-fit: contain;
     max-height: 500px;
   }
 }
 
-// Блок с информацией о товаре
 .card-page-body {
   flex: 1;
   order: 3;
@@ -156,7 +150,6 @@
   }
 }
 
-// Полное описание
 .card-page-body-full-description {
   display: flex;
   flex-direction: column;
@@ -185,7 +178,6 @@
   }
 }
 
-// Цены
 .card-page-body-price {
   display: flex;
   flex-wrap: wrap;
@@ -236,7 +228,6 @@
   }
 }
 
-// Дополнительные бейджи (наличие, рейтинг и т.д.)
 .card-page-additional-information {
   display: flex;
   flex-wrap: wrap;
@@ -253,7 +244,6 @@
   backdrop-filter: blur(2px);
 }
 
-// Специфичные бейджи
 .card-page-additional-information__is-stock {
   background: rgba($accent-green, 0.15);
   color: $accent-green;
@@ -289,7 +279,6 @@
   color: $accent-mint;
 }
 
-// Блок заказа
 .page-card-order {
   display: flex;
   align-items: center;

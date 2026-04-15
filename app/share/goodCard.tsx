@@ -1,25 +1,12 @@
 import Link from "next/link";
 import Image from "next/image";
 import "../styles/share/goodCard.scss";
-
-interface GoodCardProps {
-  id?: string;
-  title: string;
-  subTitle: string;
-  image: string;
-  priceWithoutDiscount: number;
-  isDiscount: boolean;
-  discount: string;
-  isStock: boolean;
-  doodCount: number;
-  rating: number;
-  isBuyMostOften: boolean;
-  isGreatDeals: boolean;
-  isRecommend: boolean;
-}
+import { usePriceDiscount } from "@/hooks/usePriceDiscount";
+import { IProduct } from "@/types/interfaces.type";
+import { memo } from "react";
 
 const GoodCard = ({
-  id,
+  _id,
   title,
   subTitle,
   image,
@@ -32,11 +19,9 @@ const GoodCard = ({
   isBuyMostOften,
   isGreatDeals,
   isRecommend,
-}: GoodCardProps) => {
-  
-  const priceGoodWithDiscount = isDiscount 
-    ? Math.floor(priceWithoutDiscount - (priceWithoutDiscount * parseInt(discount)) / 100)
-    : null;
+}: IProduct) => {
+
+  const priceGoodWithDiscount = usePriceDiscount(isDiscount, Number(priceWithoutDiscount), discount);
 
 
   return (
@@ -96,7 +81,7 @@ const GoodCard = ({
           </div>
           
           <Link 
-            href={"/pages/product/" + id} className="order-good">
+            href={`/pages/product/${_id}`} className="order-good">
             Заказать
           </Link>
         </div>
