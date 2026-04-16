@@ -14,6 +14,19 @@ body {
   overflow-x: hidden;
   scroll-behavior: smooth;
   background-color: $muted-black;
+  &::-webkit-scrollbar {
+    display: block;
+    width: 5px;
+    position: absolute;
+    background-color: $muted-black;
+    &:hover {
+      width: 10px;
+    }
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: $contrast-blue;
+    border-radius: 30px;
+  }
 }
 main {
   width: 100vw;

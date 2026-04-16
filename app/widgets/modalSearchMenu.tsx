@@ -8,13 +8,17 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import LittleGoodCard from "../share/littleGoodCard";
 import { IProduct } from "@/types/interfaces.type";
 import "../styles/widgets/modalSearchMenu.scss";
+import Lottie from "lottie-react";
+import loader from '../../public/animation-config/loader.json';
+import empty from '../../public/animation-config/empty.json';
 
 interface IModalSearchMenuProps {
   searchQuery: string;
   onClose: () => void;
+  change: boolean;
 }
 
-const ModalSearchMenu = ({ searchQuery, onClose }: IModalSearchMenuProps) => {
+const ModalSearchMenu = ({ searchQuery, onClose, change }: IModalSearchMenuProps) => {
   const [products, setProducts] = useState<IProduct[]>([]);
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
@@ -106,7 +110,7 @@ const ModalSearchMenu = ({ searchQuery, onClose }: IModalSearchMenuProps) => {
       initial={{ opacity: 0, height: 0 }}
       animate={{ opacity: 1, height: "auto", maxHeight: "650px" }}
       exit={{ opacity: 0, height: 0 }}
-      className="modal-menu-filteres"
+      className={`modal-menu-filteres ${change ? "modal-menu-open-change" : ""}`}
     >
       <div className="modal-search-sidebar">
         <ul>
@@ -119,22 +123,27 @@ const ModalSearchMenu = ({ searchQuery, onClose }: IModalSearchMenuProps) => {
       </div>
 
       <div className="modal-search-goods">
-        {searchQuery && (
-          <div className="search-results-header">
-            Результаты поиска по запросу: <strong>{searchQuery}</strong>
-            {total > 0 && <span className="search-results-count"> ({total})</span>}
-          </div>
-        )}
+        
         
         {!searchQuery.trim() ? (
           <div className="search-placeholder">
             Введите запрос для поиска
           </div>
         ) : loading && products.length === 0 ? (
-          <div className="search-loading">Поиск...</div>
+          <div className="search-loading">
+            <Lottie
+              animationData={loader}
+              loop={false}
+              // style={{ width: "100%", height: "100%" }}
+            />
+          </div>
         ) : products.length === 0 ? (
           <div className="search-no-results">
-            Ничего не найдено 😔
+            <Lottie
+              animationData={empty}
+              loop={false}
+              // style={{ width: "100%", height: "100%" }}
+            />
           </div>
         ) : (
           <>

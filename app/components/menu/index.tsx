@@ -5,7 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import "../../styles/menu/index.scss";
 import ModalSearchMenu from "@/app/widgets/modalSearchMenu";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { useScrollDirection } from "@/hooks/useScrollDirection";
 
 const Menu = () => {
@@ -15,7 +15,10 @@ const Menu = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [showBottomPanel, setShowBottomPanel] = useState(false);
   const scrollDIrection = useScrollDirection(10);
-  const inputRef = useRef(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  // Вычисляем есть ли реальный текст (не пробелы)
+  const hasValidText = searchQuery.trim().length > 0;
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -38,23 +41,20 @@ const Menu = () => {
   };
 
   useEffect(() => {
-    const listener = window.addEventListener("scroll", () => {
-      if (window.scrollY > 0) {
-        setIsScroll(true);
-        return;
-      }
-      setIsScroll(false);
-    });
-    return () => window.removeEventListener("scroll", listener);
+    const handleScroll = () => {
+      setIsScroll(window.scrollY > 0);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   useEffect(() => {
-    if (scrollDIrection === "down") {
-      setShowBottomPanel(true);
-      return;
-    }
-    setShowBottomPanel(false);
+    setShowBottomPanel(scrollDIrection === "down");
   }, [scrollDIrection]);
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value);
+  };
 
   return (
     <nav className={`menu ${isScroll ? "window-scroll-effect" : ""}`}>
@@ -79,7 +79,7 @@ const Menu = () => {
             type="text" 
             placeholder="Поиск" 
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={handleInputChange}
             onFocus={handleSearchFocus}
           />
           <button className="magnifying" onClick={() => setIsModalOpen(true)} />
@@ -88,6 +88,7 @@ const Menu = () => {
             <ModalSearchMenu 
               searchQuery={searchQuery}
               onClose={handleCloseModal}
+              change={hasValidText}
             />
           )}
         </div>

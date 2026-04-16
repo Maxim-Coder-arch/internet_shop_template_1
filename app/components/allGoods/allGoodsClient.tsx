@@ -6,6 +6,7 @@ import GoodCard from "@/app/share/goodCard";
 import CardsPage from "@/app/share/cardsPage";
 import GoodsHeader from "./goodsHeader";
 import { IProduct } from "@/types/interfaces.type";
+import Skeleton from "@/app/share/skeleton";
 
 interface AllGoodsClientProps {
   goodsHeaderData: Array<{
@@ -97,6 +98,7 @@ const AllGoodsClient = ({ goodsHeaderData }: AllGoodsClientProps) => {
       }
     };
   }, [loading, hasMore, page]);
+
 
   // Мемоизируем карточки, чтобы они не перерендеривались без необходимости
   const productCards = useMemo(() => {
