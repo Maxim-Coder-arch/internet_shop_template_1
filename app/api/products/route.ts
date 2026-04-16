@@ -41,9 +41,86 @@
 
 
 // app/api/products/route.ts
+// import { NextResponse } from 'next/server';
+// import { getDb } from '@/lib/db';
+// import { CATEGORIES } from '@/configs/shop';
+
+// export async function GET(request: Request) {
+//   try {
+//     const { searchParams } = new URL(request.url);
+//     const page = parseInt(searchParams.get('page') || '1');
+//     const limit = parseInt(searchParams.get('limit') || '24');
+//     const filter = searchParams.get('filter') || 'all';
+//     const skip = (page - 1) * limit;
+    
+//     const db = await getDb();
+    
+//     // Параллельно собираем товары из всех категорий
+//     const categoryPromises = CATEGORIES.map(category => 
+//       db.collection(category.id).find({}).toArray()
+//     );
+    
+//     const categoryResults = await Promise.all(categoryPromises);
+    
+//     // Объединяем все товары
+//     let allProducts: any[] = [];
+//     categoryResults.forEach((products, idx) => {
+//       const productsWithCategory = products.map(product => ({
+//         ...product,
+//         _id: product._id.toString(),
+//         _categoryId: CATEGORIES[idx].id,
+//         _categoryName: CATEGORIES[idx].name,
+//       }));
+//       allProducts.push(...productsWithCategory);
+//     });
+    
+//     // app/api/products/route.ts
+// const filterMap: Record<string, (p: any) => boolean> = {
+//   'discount': (p) => p.isDiscount === true,
+//   'in-stock': (p) => p.isStock === true,
+//   'high-rating': (p) => p.rating >= 4,
+//   'lower-price': (p) => p.isLowerPrice === true,
+//   'most-often': (p) => p.isBuyMostOften === true,
+//   'great-deals': (p) => p.isGreatDeals === true,
+//   'recommend': (p) => p.isRecommend === true,
+// };
+
+// if (filter !== 'all' && filterMap[filter]) {
+//   allProducts = allProducts.filter(filterMap[filter]);
+// }
+    
+//     // Сортировка по наличию
+//     allProducts.sort((a, b) => {
+//       if (a.isStock === b.isStock) return 0;
+//       return a.isStock ? -1 : 1;
+//     });
+    
+//     const total = allProducts.length;
+//     const paginatedProducts = allProducts.slice(skip, skip + limit);
+//     const hasMore = skip + limit < total;
+    
+//     return NextResponse.json({ 
+//       success: true, 
+//       products: paginatedProducts,
+//       total,
+//       page,
+//       limit,
+//       hasMore
+//     });
+    
+//   } catch (error) {
+//     console.error('Ошибка:', error);
+//     return NextResponse.json(
+//       { success: false, error: 'Ошибка сервера' },
+//       { status: 500 }
+//     );
+//   }
+// }
+
+
+// app/api/products/route.ts (НОВАЯ БЫСТРАЯ ВЕРСИЯ)
 import { NextResponse } from 'next/server';
 import { getDb } from '@/lib/db';
-import { CATEGORIES } from '@/configs/shop';
 
 export async function GET(request: Request) {
   try {
@@ -54,54 +131,58 @@ export async function GET(request: Request) {
     const skip = (page - 1) * limit;
     
     const db = await getDb();
+    const collection = db.collection('all_products');
     
-    // Параллельно собираем товары из всех категорий
-    const categoryPromises = CATEGORIES.map(category => 
-      db.collection(category.id).find({}).toArray()
-    );
+    // Строим фильтр для MongoDB
+    let mongoFilter: any = {};
+    switch (filter) {
+      case 'discount':
+        mongoFilter = { isDiscount: true };
+        break;
+      case 'in-stock':
+        mongoFilter = { isStock: true };
+        break;
+      case 'high-rating':
+        mongoFilter = { rating: { $gt: 4 } };
+        break;
+      case 'lower-price':
+        mongoFilter = { isLowerPrice: true };
+        break;
+      case 'most-often':
+        mongoFilter = { isBuyMostOften: true };
+        break;
+      case 'great-deals':
+        mongoFilter = { isGreatDeals: true };
+        break;
+      case 'recommend':
+        mongoFilter = { isRecommend: true };
+        break;
+      default:
+        mongoFilter = {};
+    }
     
-    const categoryResults = await Promise.all(categoryPromises);
+    // Получаем общее количество
+    const total = await collection.countDocuments(mongoFilter);
     
-    // Объединяем все товары
-    let allProducts: any[] = [];
-    categoryResults.forEach((products, idx) => {
-      const productsWithCategory = products.map(product => ({
-        ...product,
-        _id: product._id.toString(),
-        _categoryId: CATEGORIES[idx].id,
-        _categoryName: CATEGORIES[idx].name,
-      }));
-      allProducts.push(...productsWithCategory);
-    });
+    // Получаем товары с пагинацией
+    const products = await collection
+      .find(mongoFilter)
+      .sort({ isStock: -1, createdAt: -1 })
+      .skip(skip)
+      .limit(limit)
+      .toArray();
     
-    // app/api/products/route.ts
-const filterMap: Record<string, (p: any) => boolean> = {
-  'discount': (p) => p.isDiscount === true,
-  'in-stock': (p) => p.isStock === true,
-  'high-rating': (p) => p.rating >= 4,
-  'lower-price': (p) => p.isLowerPrice === true,
-  'most-often': (p) => p.isBuyMostOften === true,
-  'great-deals': (p) => p.isGreatDeals === true,
-  'recommend': (p) => p.isRecommend === true,
-};
-
-if (filter !== 'all' && filterMap[filter]) {
-  allProducts = allProducts.filter(filterMap[filter]);
-}
-    
-    // Сортировка по наличию
-    allProducts.sort((a, b) => {
-      if (a.isStock === b.isStock) return 0;
-      return a.isStock ? -1 : 1;
-    });
-    
-    const total = allProducts.length;
-    const paginatedProducts = allProducts.slice(skip, skip + limit);
     const hasMore = skip + limit < total;
+    
+    // Преобразуем ObjectId в строку
+    const serializedProducts = products.map(product => ({
+      ...product,
+      _id: product._id.toString(),
+    }));
     
     return NextResponse.json({ 
       success: true, 
-      products: paginatedProducts,
+      products: serializedProducts,
       total,
       page,
       limit,

@@ -6,11 +6,15 @@ import { usePathname } from "next/navigation";
 import "../../styles/menu/index.scss";
 import ModalSearchMenu from "@/app/widgets/modalSearchMenu";
 import { useState, useRef, useEffect } from "react";
+import { useScrollDirection } from "@/hooks/useScrollDirection";
 
 const Menu = () => {
   const pathName = usePathname();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isScroll, setIsScroll] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [showBottomPanel, setShowBottomPanel] = useState(false);
+  const scrollDIrection = useScrollDirection(10);
   const inputRef = useRef(null);
 
   useEffect(() => {
@@ -33,8 +37,27 @@ const Menu = () => {
     setSearchQuery("");
   };
 
+  useEffect(() => {
+    const listener = window.addEventListener("scroll", () => {
+      if (window.scrollY > 0) {
+        setIsScroll(true);
+        return;
+      }
+      setIsScroll(false);
+    });
+    return () => window.removeEventListener("scroll", listener);
+  }, []);
+
+  useEffect(() => {
+    if (scrollDIrection === "down") {
+      setShowBottomPanel(true);
+      return;
+    }
+    setShowBottomPanel(false);
+  }, [scrollDIrection]);
+
   return (
-    <nav className="menu">
+    <nav className={`menu ${isScroll ? "window-scroll-effect" : ""}`}>
       <div className="menu-header">
         <span>{data.menu.companyName}</span>
         
@@ -75,7 +98,7 @@ const Menu = () => {
         </div>
       </div>
       
-      <div className="menu-options">
+      <div className={`menu-options ${!showBottomPanel ? "" : "menu-options-hidden"}`}>
         <ul>
           {data.menu.categories.map((category, index) => (
             <Link href={category.link} key={index}>

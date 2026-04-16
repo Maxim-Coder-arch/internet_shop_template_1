@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./styles/reset/reset.scss";
 import Menu from "./components/menu";
+import RocketLoader from "./share/loader";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -16,6 +17,7 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <Menu />
+        <RocketLoader />
         {children}
       </body>
     </html>

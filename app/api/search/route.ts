@@ -1,7 +1,6 @@
-// app/api/search/route.ts
+// app/api/search/route.ts (НОВАЯ БЫСТРАЯ ВЕРСИЯ)
 import { NextResponse } from 'next/server';
 import { getDb } from '@/lib/db';
-import { CATEGORIES } from '@/configs/shop';
 
 export async function GET(request: Request) {
   try {
@@ -16,39 +15,41 @@ export async function GET(request: Request) {
     }
     
     const db = await getDb();
+    const collection = db.collection('all_products');
+    
+    // Поиск по текстовому индексу (или через regex)
     const searchLower = query.toLowerCase();
-    const allResults: any[] = [];
     
-    // Ищем во всех категориях
-    for (const category of CATEGORIES) {
-      const products = await db
-        .collection(category.id)
-        .find({
-          $or: [
-            { title: { $regex: searchLower, $options: 'i' } },
-            { subTitle: { $regex: searchLower, $options: 'i' } },
-            { fullDescription: { $regex: searchLower, $options: 'i' } },
-          ]
-        })
-        .toArray();
-      
-      const resultsWithCategory = products.map(product => ({
-        ...product,
-        _id: product._id.toString(),
-        _categoryId: category.id,
-        _categoryName: category.name,
-      }));
-      
-      allResults.push(...resultsWithCategory);
-    }
+    // Вариант 1: через регулярные выражения (работает всегда)
+    const mongoFilter = {
+      $or: [
+        { title: { $regex: searchLower, $options: 'i' } },
+        { subTitle: { $regex: searchLower, $options: 'i' } },
+        { fullDescription: { $regex: searchLower, $options: 'i' } },
+      ]
+    };
     
-    const total = allResults.length;
-    const paginatedResults = allResults.slice(skip, skip + limit);
+    // Получаем общее количество
+    const total = await collection.countDocuments(mongoFilter);
+    
+    // Получаем товары с пагинацией
+    const products = await collection
+      .find(mongoFilter)
+      .sort({ isStock: -1, createdAt: -1 })
+      .skip(skip)
+      .limit(limit)
+      .toArray();
+    
     const hasMore = skip + limit < total;
+    
+    const serializedProducts = products.map(product => ({
+      ...product,
+      _id: product._id.toString(),
+    }));
     
     return NextResponse.json({ 
       success: true, 
-      products: paginatedResults,
+      products: serializedProducts,
       total,
       page,
       limit,
