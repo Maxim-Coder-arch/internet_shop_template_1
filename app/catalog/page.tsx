@@ -1,11 +1,11 @@
-// app/catalog/page.tsx (или любая страница, где используется AllGoods)
-import { getAllProducts } from '@/lib/get-data/products';
+// app/catalog/page.tsx
 import AllGoodsClient from '../components/allGoods/allGoodsClient';
+import { websiteData as data } from '@/data/websiteData';
 
 export default async function CatalogPage() {
-  // Получаем данные на сервере
-  const products = await getAllProducts();
-  
-  // Передаём в клиентский компонент
-  return <AllGoodsClient initialProducts={products} />;
+  return (
+    <AllGoodsClient 
+      goodsHeaderData={data.allDoods.goodsheader}
+    />
+  );
 }
