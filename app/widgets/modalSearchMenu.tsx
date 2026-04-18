@@ -17,9 +17,10 @@ interface IModalSearchMenuProps {
   searchQuery: string;
   onClose: () => void;
   change: boolean;
+  ignoreRef?: React.RefObject<HTMLElement>;
 }
 
-const ModalSearchMenu = ({ searchQuery, onClose, change }: IModalSearchMenuProps) => {
+const ModalSearchMenu = ({ searchQuery, onClose, change, ignoreRef }: IModalSearchMenuProps) => {
   const [products, setProducts] = useState<IProduct[]>([]);
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
@@ -77,17 +78,24 @@ const ModalSearchMenu = ({ searchQuery, onClose, change }: IModalSearchMenuProps
   }, [searchQuery]);
 
   useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
-        onClose();
-      }
-    };
+  const handleClickOutside = (event: MouseEvent) => {
+    const target = event.target as HTMLElement;
     
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [onClose]);
+    // Если клик по кнопке с классом open-categories — ничего не делаем
+    if (target.closest('.open-categories')) {
+      return;
+    }
+    
+    if (modalRef.current && !modalRef.current.contains(target)) {
+      onClose();
+    }
+  };
+  
+  document.addEventListener('mousedown', handleClickOutside);
+  return () => {
+    document.removeEventListener('mousedown', handleClickOutside);
+  };
+}, [onClose]);
 
   // Observer для подгрузки следующих страниц
   useEffect(() => {

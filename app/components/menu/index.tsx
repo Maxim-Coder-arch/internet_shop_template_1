@@ -17,6 +17,7 @@ const Menu = () => {
   const [showBottomPanel, setShowBottomPanel] = useState(false);
   const scrollDIrection = useScrollDirection(10);
   const inputRef = useRef<HTMLInputElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
 
   // Вычисляем есть ли реальный текст (не пробелы)
   const hasValidText = searchQuery.trim().length > 0;
@@ -91,6 +92,7 @@ const Menu = () => {
               searchQuery={searchQuery}
               onClose={handleCloseModal}
               change={hasValidText}
+              ignoreRef={buttonRef}
             />
           )}
         </div>
