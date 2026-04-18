@@ -6,6 +6,7 @@ import GoodCard from "@/app/share/goodCard";
 import CardsPage from "@/app/share/cardsPage";
 import { IProduct } from "@/types/interfaces.type";
 import "../styles/share/areaInPages.scss";
+import GoodsLoader from "./goodsLoader";
 
 interface FilterPageClientProps {
   filterType: string;
@@ -130,10 +131,7 @@ const FilterPageClient = ({ filterType, title, subtitle }: FilterPageClientProps
         </CardsPage>
         
         {loading && (
-          <div className="loading-indicator">
-            <div className="spinner" />
-            Загрузка товаров...
-          </div>
+          <GoodsLoader />
         )}
         
         {!hasMore && products.length > 0 && (

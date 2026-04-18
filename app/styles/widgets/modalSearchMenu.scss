@@ -1,8 +1,9 @@
 @use "../colors/colors.scss" as *;
 @use "../mixins/mixins.scss" as *;
 
+// Полноэкранный режим — скрываем боковую панель
 .modal-menu-open-change {
-  .modal-search-sidebar  {
+  .modal-search-sidebar {
     display: none;
   }
 }
@@ -25,7 +26,6 @@
   background: $bg-dark;
   backdrop-filter: blur(10px);
   box-shadow: 0 25px 40px -12px rgba($black, 0.4);
-  // transition: all 0.3s ease;
   
   @media (max-width: 768px) {
     flex-direction: column;
@@ -47,11 +47,15 @@
     border-bottom: 1px solid rgba($border-light, 0.1);
     padding-bottom: 1rem;
     margin-bottom: 1rem;
+    & ul a {
+      background: rgba($contrast-blue, 0.1);
+    }
   }
   
   ul {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    flex-wrap: wrap;
     gap: 0.5rem;
     
     a {
@@ -76,6 +80,13 @@
   }
 }
 
+.search-placeholder {
+  width: 100%;
+  text-align: center;
+  color: $text-secondary;
+  @include font(0.8rem, 400);
+}
+
 .modal-search-goods {
   flex: 1;
   overflow-y: auto;
@@ -85,30 +96,38 @@
   padding-left: 0.5rem;
   max-height: 550px;
   
+  // 🔥 НА МОБИЛКАХ — 2 КАРТОЧКИ В РЯД
   @media (max-width: 768px) {
-    grid-template-columns: 1fr;
-    max-height: 400px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.8rem;
+    padding-left: 0;
+    max-height: auto;
+  }
+  
+  @media (max-width: 480px) {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.6rem;
   }
   
   &::-webkit-scrollbar {
     display: block;
-    width: 4px;
-  }
-  &::-webkit-scrollbar-track {
-    background: rgba($border-light, 0.05);
+    width: 2px;
+    position: absolute;
   }
   &::-webkit-scrollbar-thumb {
     background: $accent-primary;
     border-radius: 4px;
   }
-  // 🔥 Элемент на всю ширину грида
+  
+  // Элементы на всю ширину
   > .search-loading,
   > .search-no-results,
   > .search-results-header,
   > .end-message,
+  > .search-placeholder,
   > .empty-message {
+    grid-column: 1 / -1;
     width: 100%;
-    flex: 1;
     display: flex;
     align-items: center;
     justify-content: center;

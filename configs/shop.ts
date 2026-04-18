@@ -3,7 +3,7 @@ export const DATABASE_NAME = 'nexsol_shop_client1';
 
 export const CATEGORIES = [
   { id: 'mens-bags', name: "Мужские сумки", slug: 'mens-bags', order: 1 },
-  { id: 'womens-bags', name: "Женскеи сумки", slug: 'womens-bags', order: 2 },
+  { id: 'womens-bags', name: "Женские сумки", slug: 'womens-bags', order: 2 },
   { id: 'mens-belts', name: "Мужские ремни", slug: 'mens-belts', order: 3 },
   { id: 'womens-belts', name: "Женские ремни", slug: 'womens-belts', order: 4 },
   { id: 'childrens-bags', name: "Детские сумки", slug: 'childrens-bags', order: 5 },

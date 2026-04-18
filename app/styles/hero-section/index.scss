@@ -15,6 +15,8 @@
   background-image: url("/images/hero-section.jpg");
   background-size: cover;
   display: flex;
+  background-position-x: center;
+  background-position-y: bottom;
   flex-direction: column;
   row-gap: 1rem;
   padding-left: 5rem;
@@ -48,5 +50,20 @@
     background-color: $muted-black;
     border-top-left-radius: 40px;
     border-top-right-radius: 40px;
+  }
+  @media screen and (max-width: 768px) {
+    padding: 0;
+    align-items: center;
+    text-align: center;
+    & h1 {
+      font-size: 3rem;
+      max-width: fit-content;
+    }
+    & p {
+      font-size: 1rem;
+    }
+    & a {
+      padding: 10px 15px;
+    }
   }
 }

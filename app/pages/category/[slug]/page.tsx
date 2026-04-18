@@ -8,6 +8,7 @@ import CardsPage from '@/app/share/cardsPage';
 import GoodCard from '@/app/share/goodCard';
 import { IProduct } from '@/types/interfaces.type';
 import "../../../styles/share/areaInPages.scss";
+import GoodsLoader from "@/app/share/goodsLoader";
 
 export default function CategoryPage() {
   const params = useParams();
@@ -98,50 +99,46 @@ export default function CategoryPage() {
   
   const productCards = useMemo(() => {
     return products.map((product) => (
-      <div className="area-in-pages" key={product._id}>
-        <CardsPage>
-          <GoodCard
-            _id={product._id}
-            title={product.title}
-            subTitle={product.subTitle}
-            image={product.image}
-            priceWithoutDiscount={product.priceWithoutDiscount}
-            isDiscount={product.isDiscount}
-            discount={product.discount}
-            isStock={product.isStock}
-            doodCount={product.doodCount}
-            rating={product.rating}
-            isBuyMostOften={product.isBuyMostOften}
-            isGreatDeals={product.isGreatDeals}
-            isRecommend={product.isRecommend}
-          />
-        </CardsPage>
-      </div>
+      <GoodCard
+        key={product._id}
+        _id={product._id}
+        title={product.title}
+        subTitle={product.subTitle}
+        image={product.image}
+        priceWithoutDiscount={product.priceWithoutDiscount}
+        isDiscount={product.isDiscount}
+        discount={product.discount}
+        isStock={product.isStock}
+        doodCount={product.doodCount}
+        rating={product.rating}
+        isBuyMostOften={product.isBuyMostOften}
+        isGreatDeals={product.isGreatDeals}
+        isRecommend={product.isRecommend}
+      />
     ));
   }, [products]);
   
   return (
-    <div className="area-in-pages">
-      <CardsPage>
-        {productCards}
+    <section className="template-area-sections">
+      <div className="area-in-pages">
+        <CardsPage>
+          {productCards}
+          
+          {hasMore && (
+            <div ref={loadingRef} style={{ height: '1px', width: '100%' }} />
+          )}
+        </CardsPage>
         
-        {hasMore && (
-          <div ref={loadingRef} style={{ height: '1px', width: '100%' }} />
+        {loading && (
+          <GoodsLoader />
         )}
-      </CardsPage>
-      
-      {loading && (
-        <div className="loading-indicator">
-          <div className="spinner" />
-          Загрузка товаров...
-        </div>
-      )}
-      
-      {!hasMore && products.length > 0 && (
-        <div className="end-message">
-          🎉 Вы просмотрели все {totalCount} товаров
-        </div>
-      )}
-    </div>
+        
+        {!hasMore && products.length > 0 && (
+          <div className="end-message">
+            🎉 Вы просмотрели все {totalCount} товаров
+          </div>
+        )}
+      </div>
+    </section>
   );
 }

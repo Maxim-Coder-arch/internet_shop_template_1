@@ -11,6 +11,7 @@ import "../styles/widgets/modalSearchMenu.scss";
 import Lottie from "lottie-react";
 import loader from '../../public/animation-config/loader.json';
 import empty from '../../public/animation-config/empty.json';
+import GoodsLoader from "../share/goodsLoader";
 
 interface IModalSearchMenuProps {
   searchQuery: string;
@@ -24,7 +25,7 @@ const ModalSearchMenu = ({ searchQuery, onClose, change }: IModalSearchMenuProps
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const [total, setTotal] = useState(0);
-  
+  const modalRef = useRef<HTMLDivElement | null>(null);
   const observerRef = useRef<IntersectionObserver | null>(null);
   const loadingRef = useRef<HTMLDivElement | null>(null);
   
@@ -75,6 +76,19 @@ const ModalSearchMenu = ({ searchQuery, onClose, change }: IModalSearchMenuProps
     fetchSearchResults(1, true);
   }, [searchQuery]);
 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
+        onClose();
+      }
+    };
+    
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [onClose]);
+
   // Observer для подгрузки следующих страниц
   useEffect(() => {
     if (!loadingRef.current || !hasMore || loading || !searchQuery.trim()) return;
@@ -111,6 +125,7 @@ const ModalSearchMenu = ({ searchQuery, onClose, change }: IModalSearchMenuProps
       animate={{ opacity: 1, height: "auto", maxHeight: "650px" }}
       exit={{ opacity: 0, height: 0 }}
       className={`modal-menu-filteres ${change ? "modal-menu-open-change" : ""}`}
+      ref={modalRef}
     >
       <div className="modal-search-sidebar">
         <ul>
@@ -160,7 +175,7 @@ const ModalSearchMenu = ({ searchQuery, onClose, change }: IModalSearchMenuProps
             )}
             
             {loading && products.length > 0 && (
-              <div className="search-loading-more">Загрузка ещё...</div>
+              <GoodsLoader />
             )}
           </>
         )}

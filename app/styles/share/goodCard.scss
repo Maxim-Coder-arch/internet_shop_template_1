@@ -1,241 +1,230 @@
 @use "../colors/colors.scss" as *;
 @use "../mixins/mixins.scss" as *;
 
+// Карточка товара
 .good-card {
-  width: calc((100% / 4) - 20px);
-  height: 450px;
-  min-width: 300px;
+  // Убираем фиксированную ширину
+  width: 100%;
+  height: auto;
+  min-height: 380px;
   background-color: $white;
-  border-radius: 20px;
+  border-radius: 16px;
   overflow: hidden;
   position: relative;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding-bottom: 10px;
+  transition: transform 0.2s, box-shadow 0.2s;
+  
   &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    
     .good-card-image img {
-      scale: 1.1;
+      transform: scale(1.05);
     }
     .good-card-header {
       opacity: 0;
     }
   }
-}
-
-.good-card-image {
-  width: 100%;
-  height: 250px;
-  overflow: hidden;
-  background: rgba($black, 0.3);
-  position: relative;
-  & img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: scale 0.3s ease-in-out;
+  
+  // Адаптивные размеры
+  @media (max-width: 768px) {
+    min-height: 320px;
+    border-radius: 12px;
+  }
+  
+  @media (max-width: 480px) {
+    min-height: 280px;
   }
 }
 
+// Изображение
+.good-card-image {
+  width: 100%;
+  aspect-ratio: 1 / 1; // Квадратное изображение
+  overflow: hidden;
+  background: rgba($black, 0.3);
+  position: relative;
+  
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease-in-out;
+  }
+  
+  @media (max-width: 768px) {
+    aspect-ratio: 1 / 1;
+  }
+}
+
+// Заголовок карточки (бейджи)
 .good-card-header {
   z-index: 2;
   position: absolute;
-  top: 10px;
-  left: 10px;
+  top: 8px;
+  left: 8px;
   display: flex;
   gap: 5px;
   flex-wrap: wrap;
   transition: opacity 0.3s ease-in-out;
+  
+  @media (max-width: 768px) {
+    top: 6px;
+    left: 6px;
+    gap: 4px;
+  }
+}
+
+.good-rating,
+.buy-most-often-badge {
+  @include font(0.7rem, 500);
+  color: $white;
+  padding: 3px 8px;
+  border-radius: 20px;
+  
+  @media (max-width: 768px) {
+    @include font(0.6rem, 500);
+    padding: 2px 6px;
+  }
 }
 
 .good-rating {
-  @include font(0.8rem, 100);
-  color: $white;
-  margin-bottom: 5px;
   background-color: $accent-red;
-  padding: 3px 5px;
-  border-radius: 20px;
 }
 
 .buy-most-often-badge {
-  @include font(0.8rem, 100);
-  color: $white;
-  margin-bottom: 5px;
   background-color: $accent-green;
-  padding: 3px 5px;
-  border-radius: 20px;
 }
 
-.good-card-body {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-}
-
+// Информация о товаре
 .good-card-meta {
   width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
-  row-gap: 10px;
-  & p {
-    @include font(0.8rem, 700);
+  text-align: center;
+  padding: 12px;
+  gap: 6px;
+  
+  p {
+    @include font(0.75rem, 600);
     color: $primary-gray;
+    margin: 0;
+    
+    @media (max-width: 768px) {
+      @include font(0.7rem, 600);
+    }
   }
-  & h3 {
-    @include font(1.4rem, 600);
+  
+  h3 {
+    @include font(1rem, 600);
     color: $primary-black;
+    margin: 0;
+    
+    @media (max-width: 768px) {
+      @include font(0.85rem, 600);
+    }
   }
-  & span {
-    @include font(0.8rem, 700);
+  
+  span {
+    @include font(0.7rem, 600);
     color: $primary-gray;
+    
+    @media (max-width: 768px) {
+      @include font(0.65rem, 600);
+    }
   }
 }
 
-
+// Нижняя часть карточки (цена и кнопка)
 .good-card-target {
   display: flex;
   width: 100%;
   justify-content: space-between;
-  height: 40px;
   align-items: center;
-  padding: {
-    left: 10px;
-    right: 10px;
-  };
+  padding: 8px 12px;
+  gap: 8px;
+  
+  @media (max-width: 768px) {
+    padding: 6px 8px;
+  }
 }
 
-.discount-badge {
-  @include font(0.8rem, 700);
-  color: $primary-gray;
-}
-
-.price-old {
-  text-decoration: line-through;
+.good-price {
+  flex: 1;
+  min-width: 0;
 }
 
 .good-discount-price-block {
   display: flex;
-  column-gap: 10px;
+  align-items: baseline;
+  gap: 6px;
+  flex-wrap: wrap;
 }
 
 .new-price {
-  @include font(1.4rem, 700);
+  @include font(1rem, 700);
+  color: $accent-red;
+  
+  @media (max-width: 768px) {
+    @include font(0.85rem, 700);
+  }
 }
 
 .discount-badge {
-  @include font(0.8rem, 700);
+  @include font(0.7rem, 600);
   color: $accent-red;
+  
+  @media (max-width: 768px) {
+    @include font(0.6rem, 600);
+  }
 }
 
 .price-old {
-  @include font(1rem, 400);
+  @include font(0.7rem, 400);
   color: $primary-gray;
-}
-
-.good-price {
-  width: 60%;
+  text-decoration: line-through;
+  display: block;
+  
+  @media (max-width: 768px) {
+    @include font(0.6rem, 400);
+  }
 }
 
 .usually-price {
-  @include font(1.4rem, 700);
+  @include font(1rem, 700);
   color: $primary-black;
+  
+  @media (max-width: 768px) {
+    @include font(0.85rem, 700);
+  }
 }
 
 .order-good {
-  @include font(1rem, 700);
+  @include font(0.8rem, 600);
   color: $white;
   background-color: $primary-orange;
-  width: calc(100% - 45%);
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  padding: 6px 12px;
   border-radius: 20px;
-  height: 100%;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: all 0.2s;
+  
   &:hover {
-    filter: brightness(120%);
+    filter: brightness(110%);
+    transform: translateY(-1px);
+  }
+  
+  @media (max-width: 768px) {
+    @include font(0.7rem, 600);
+    padding: 5px 10px;
   }
 }
 
 .no-stock {
   filter: grayscale(100%);
+  opacity: 0.6;
   pointer-events: none;
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// styles/all-goods/index.scss
-.skeleton-card {
-  width: 100%;
-  background: rgba(black, 0.05);
-  border-radius: 12px;
-  overflow: hidden;
-  
-  .skeleton-image {
-    width: 100%;
-    padding-top: 100%;
-    background: linear-gradient(90deg, 
-      rgba(black, 0.05) 25%, 
-      rgba(black, 0.1) 50%, 
-      rgba(black, 0.05) 75%);
-    background-size: 200% 100%;
-    animation: loading 1.5s infinite;
-  }
-  
-  .skeleton-title {
-    height: 20px;
-    margin: 12px;
-    background: rgba(black, 0.05);
-    border-radius: 4px;
-  }
-  
-  .skeleton-price {
-    height: 24px;
-    margin: 12px;
-    width: 60%;
-    background: rgba(black, 0.05);
-    border-radius: 4px;
-  }
-}
-
-@keyframes loading {
-  0% { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
-}
-
-.loading-indicator {
-  text-align: center;
-  padding: 2rem;
-  color: black;
-}
-
-.end-message {
-  text-align: center;
-  padding: 2rem;
-  color: black;
-  border-top: 1px solid rgba(black, 0.1);
-  margin-top: 1rem;
 }

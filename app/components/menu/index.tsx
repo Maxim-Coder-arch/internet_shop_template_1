@@ -7,6 +7,7 @@ import "../../styles/menu/index.scss";
 import ModalSearchMenu from "@/app/widgets/modalSearchMenu";
 import { useState, useRef, useEffect, useCallback } from "react";
 import { useScrollDirection } from "@/hooks/useScrollDirection";
+import BackdropBlur from "@/app/share/backdropBlur";
 
 const Menu = () => {
   const pathName = usePathname();
@@ -57,6 +58,7 @@ const Menu = () => {
   };
 
   return (
+    <>
     <nav className={`menu ${isScroll ? "window-scroll-effect" : ""}`}>
       <div className="menu-header">
         <span>{data.menu.companyName}</span>
@@ -92,7 +94,6 @@ const Menu = () => {
             />
           )}
         </div>
-        
         <div className="menu-target">
           <Link href="#">{data.menu.targetAction}</Link>
           <Link href="#">{data.menu.consultation}</Link>
@@ -111,6 +112,8 @@ const Menu = () => {
         </ul>
       </div>
     </nav>
+    {<BackdropBlur isOPen={isModalOpen} />}
+    </>
   );
 };
 

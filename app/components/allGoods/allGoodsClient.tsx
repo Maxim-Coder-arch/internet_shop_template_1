@@ -6,7 +6,7 @@ import GoodCard from "@/app/share/goodCard";
 import CardsPage from "@/app/share/cardsPage";
 import GoodsHeader from "./goodsHeader";
 import { IProduct } from "@/types/interfaces.type";
-import Skeleton from "@/app/share/skeleton";
+import GoodsLoader from "@/app/share/goodsLoader";
 
 interface AllGoodsClientProps {
   goodsHeaderData: Array<{
@@ -145,10 +145,7 @@ const AllGoodsClient = ({ goodsHeaderData }: AllGoodsClientProps) => {
         </CardsPage>
         
         {loading && (
-          <div className="loading-indicator">
-            <div className="spinner" />
-            Загрузка товаров...
-          </div>
+          <GoodsLoader />
         )}
         
         {!hasMore && products.length > 0 && (
